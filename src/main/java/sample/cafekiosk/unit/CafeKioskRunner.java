@@ -2,6 +2,9 @@ package sample.cafekiosk.unit;
 
 import sample.cafekiosk.unit.beverage.Americano;
 import sample.cafekiosk.unit.beverage.Latte;
+import sample.cafekiosk.unit.order.Order;
+
+import java.time.LocalDateTime;
 
 public class CafeKioskRunner {
     public static void main(String[] args) {
@@ -14,5 +17,8 @@ public class CafeKioskRunner {
 
         int totalPrice = cafeKiosk.calculateTotalPrice();
         System.out.println(" 총 주문가격 :"+totalPrice);
+
+        // 프로덕트 코드에서는 현재 시간을 넣어줌
+        Order order = cafeKiosk.createOrder(LocalDateTime.now());
     }
 }
