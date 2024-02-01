@@ -21,7 +21,8 @@ public class CafeKioskTest {
         System.out.println(" >>> 담긴 음료수 :" + cafeKiosk.getBeverages().size());
         System.out.println(" >>> 담긴 음료  :" + cafeKiosk.getBeverages().get(0).getName());
     }
-    @DisplayName("자동화된 테스트")
+//    @DisplayName("음료 1개를 추가한다")
+    @DisplayName("음료 1개를 추가하면 주문 목록에 담긴다") //자동화된 테스트
     @Test
     void add()
     {
@@ -79,6 +80,24 @@ public class CafeKioskTest {
 
         cafeKiosk.clear();
         assertThat(cafeKiosk.getBeverages()).isEmpty();
+    }
+
+    @DisplayName("주문 목록에 담신 상품들의 총 금액을 계산할 수 있다.")
+    @Test
+    void calculateTotalPriceTDDVer(){
+        // given
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        Latte latte = new Latte();
+
+        cafeKiosk.add(americano);
+        cafeKiosk.add(latte);
+
+        // when
+        int totalPrice = cafeKiosk.calculateTotalPriceTDDVer();
+
+        //then
+        assertThat(totalPrice).isEqualTo(8500); // 처음에는 calculateTotalPriceTDDVer 구현부를 작성하지 않았으므로 실패(RED)
     }
 
     @DisplayName("테스트 실행 시간에 따라 성공/실패가 달라지는 테스트")

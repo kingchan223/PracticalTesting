@@ -58,4 +58,17 @@ public class CafeKiosk {
     public List<Beverage> getBeverages() {
         return beverages;
     }
+
+    public int calculateTotalPriceTDDVer() {
+//        return 0; // red
+//        return 8500; //green
+        int totalPrice = 0;
+        for (Beverage beverage : beverages) {
+            totalPrice += beverage.getPrice();
+        }
+
+//        return totalPrice;//refactoring1
+
+        return beverages.stream().mapToInt(Beverage::getPrice).sum();//refactoring2
+    }
 }
