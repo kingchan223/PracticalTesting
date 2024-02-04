@@ -32,7 +32,7 @@ public class OrderTest {
 
      }
 
-    @DisplayName("주문 생성 시 주문 상태는 INIT이다.")
+    @DisplayName("주문 생성 시 주문 상태는 INIT 이다.")
     @Test
     void createOrderStatusINIT(){
 
@@ -53,8 +53,6 @@ public class OrderTest {
     @DisplayName("주문 생성 시 주문 등록 시간을 넣어준다.")
     @Test
     void registerDateTime(){
-
-
         //1. given
         LocalDateTime registeredDateTime = LocalDateTime.now();
         List<Product> products = List.of(
@@ -67,7 +65,6 @@ public class OrderTest {
 
         //4. then
         assertThat(order.getRegisteredDateTime()).isEqualTo(registeredDateTime);
-
     }
 
     private Product createProduct(String productNumber, int price) {

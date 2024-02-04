@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+import static sample.cafekiosk.spring.domain.product.ProductType.BAKERY;
+import static sample.cafekiosk.spring.domain.product.ProductType.BOTTLE;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -27,5 +32,9 @@ public class Product {
         this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
+    }
+
+    public static boolean containsStockType(ProductType type) {
+        return List.of(BOTTLE, BAKERY).contains(type);
     }
 }
