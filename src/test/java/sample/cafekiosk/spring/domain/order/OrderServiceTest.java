@@ -26,7 +26,7 @@ import static sample.cafekiosk.spring.domain.product.ProductType.*;
 
 //@DataJpaTest /얘는 service 객체 못찾음
 @ActiveProfiles("test")
-//@Transactional//(롤백을 대신 해줌 tearDown 필요없음) <- 실제 서비스 레이어의 트랜잭션 설정이 되어있는것처럼 보일 수 있기 때문에 잘 알고 사용해야한다.
+//@Transactional//(롤백을 대신 해줌 tearDown 필요없음) <- 실제 서비스 레이어의 트랜잭션이 설정되어있는 것처럼 보일 수 있기 때문에 잘 알고 사용해야한다.
 @SpringBootTest
 public class OrderServiceTest {
     @Autowired
@@ -42,6 +42,7 @@ public class OrderServiceTest {
 
     // 아래 테스트 메서드들이 각각 product들을 저장하면서 데아터가 중복될 수 있다.
     // 하여 tearDown 작업을 해준다.
+    // @Transactional을 사용하기 보다 해당 메서드를 사용하는 것이 좋다.
     @AfterEach
     void tearDown() {
         orderProductRepository.deleteAllInBatch();

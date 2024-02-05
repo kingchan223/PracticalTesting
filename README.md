@@ -126,11 +126,11 @@ ORM
 - id, 상품 번호, 상품 타입, 판매 상태, 상품 이름, 가격
 코드: ProductRepositoryTest
 ----
-persistence layer
+## persistence layer
 - data access의 역할에 집중
 - 비즈니스 가공 로직이 포한되어서는 안된다. Data에 대한 CRUD에만 집중하는 레이어이다.
 
-business layer
+## business layer
 - 비즈니스 로직을 구현하는 역할
 - persistence layer와의 상호작용을 통해 비즈니스 로직을 개선시킨다.
 - 트랜잭션을 보장해야 한다.
@@ -144,3 +144,38 @@ business layer
 - 주문 생성 시 재고 확인 및 개수 차감 후 생성하기
 - 재고는 상품 번호를 가진다.
 - 재고와 관련 있는 상품 타입은 병 음료, 베이커리이다.
+
+
+----
+
+## Presentation layer (Controller Test)
+- 외부 세계에서 가장 먼저 요청을 받는 계층
+- 파라미터에 대한 최소한의 검증을 수행
+- Presentation layer를 테스트할 때는 persistence, business layer는 mocking을 한다.
+
+### Mock
+MockMvc
+- Mock(가짜) 객체를 사용해 스프링 MVC 동작을 재현할 수 있는 테스트 프레임워크
+
+요구사항 : 어드민 상품 등록 기능 (상품명,상품타입,판매상태,가격 등을 입력받는다.)
+
+정리
+- 테스트하기 어려운 부분을 분석하고 외부로 뽑아내기
+- StockTest.class
+- 트랜잭션에 유의하며 테스트
+- 경계값에서 태스트
+- 테스크 코드가 문서라고 생각하면서 @DisplayName을 상세하게하자
+- BDD 스타일
+- 작은 메서드들에 대해서도 테스트 코드 작성하기 ex) ProductTypeTest.class, StockTest.class
+- @SpringBootTest vs @DataJpaTest
+    - @DataJpaTest
+    - 자동으로 롤백을 해주는 @Transactional을 포함한다.
+    - 오직 JPA 컴포넌들만을 테스트하기 위한 어노테이션이다.
+    - JPA와 연관된 config만 적용한다.
+    - H2와 같은 인메모리 DB를 활용해 테스트가 실행된다.
+    - @SpringBootTest :
+    - full application config를 로드해서 통합테스트한다.
+    - 모든 config, context, components 로드한다.
+    - 인메모리, 로컬, 외부 상관없이 모든 DB 사용이 가능하다.
+    - 트랜잭션마다 롤백되지 않으므로 @Transactional을 추가로 달아줘야 한다.
+- CQRS
