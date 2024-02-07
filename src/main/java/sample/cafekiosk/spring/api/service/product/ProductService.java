@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
+import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
@@ -32,18 +33,16 @@ public class ProductService {
         return productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay()).stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
-
     }
     // 동시성 이슈 발생 가능 : UUID를 사용하거나 product_number 필드에 유니크 인덱스를 걸고 재시도하는 로직을 추가하는 방법
     @Transactional
-    public ProductResponse createProduct(ProductCreateRequest request) {
+    public ProductResponse createProduct(ProductCreateServiceRequest request) {
         String nextProductNumber = createNextProductNumber();
 
         Product product = request.toEntity(nextProductNumber);
         productRepository.save(product);
         return ProductResponse.of(product);
     }
-
     private String createNextProductNumber() {
         String latestProductNumber =  productRepository.findLatestProductNumber();
         if(latestProductNumber == null) return "001";

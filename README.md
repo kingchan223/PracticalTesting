@@ -126,11 +126,11 @@ ORM
 - id, 상품 번호, 상품 타입, 판매 상태, 상품 이름, 가격
 코드: ProductRepositoryTest
 ----
-## persistence layer
+## Persistence layer
 - data access의 역할에 집중
 - 비즈니스 가공 로직이 포한되어서는 안된다. Data에 대한 CRUD에만 집중하는 레이어이다.
 
-## business layer
+## Business layer
 - 비즈니스 로직을 구현하는 역할
 - persistence layer와의 상호작용을 통해 비즈니스 로직을 개선시킨다.
 - 트랜잭션을 보장해야 한다.
@@ -139,12 +139,13 @@ ORM
 - 상품 번호 리스트를 받아 주문 생성하기
 - 주문은 주문 상태, 주문 등록 시간을 가진다.
 - 주문의 총 금액을 계산할 수 있어야 한다.
+- OrderService.createOrder
 
 추가 요구사항
 - 주문 생성 시 재고 확인 및 개수 차감 후 생성하기
 - 재고는 상품 번호를 가진다.
 - 재고와 관련 있는 상품 타입은 병 음료, 베이커리이다.
-
+- OrderService.deductStockQuantities, ProductTypeTest, StockRepositoryTest
 
 ----
 
@@ -158,7 +159,43 @@ MockMvc
 - Mock(가짜) 객체를 사용해 스프링 MVC 동작을 재현할 수 있는 테스트 프레임워크
 
 요구사항 : 어드민 상품 등록 기능 (상품명,상품타입,판매상태,가격 등을 입력받는다.)
+ProductService.createProduct
 
+
+### Validation
+
+
+- @NotNull vs @NotBlank vs @NotEmpty
+    - @NotNull  : 빈 문자열(""), 빈 공백(" ")도 통과됨
+    - @NotEmpty : 빈 문자열은 통과 안되지만 빈 공백도 통과됨
+    - @NotBlank : 빈 문자열, 빈 공백 모두 통과됨
+- String name 상품 이름이 20자 제한이 있는 경우.
+  - 이걸 controller에서 걸러야하는 조건이 맞을까?
+  - String에 대한 기본적인 조건인 NotBlank에서 하는 것이 좋고, 
+  - 20자 제한 같은 안쪽 서비스 레이어, 생성자에서 하는 것이 더 좋다.
+
+키워드 정리
+- 레이어드 아키텍쳐
+  - 단점 : Order 객체가 너무 DBMS와 강경합이지 않나?(@Entity 어노테이션이 붙어있고, Jpa 리퍼지토리를 보면 그래 보임)
+- 헥사고날 아키텍처 (포트 어댑터 아키텍처)
+  - 레이어드 단점으로 인해 나옴
+  - 큰 시스템이고 모듈이 많아진다면 헥사고날 적용이 좋을듯
+- 단위 테스트와 통합 테스트
+- IoC, DI, AOP
+- ORM, 패러다임 불일치, Hibernate
+- Spring DATA JPA
+- @SpringBootTest vs @DataJpaTest
+- @SpringBootTest vs @WebMvcTest
+- @Transactional(readOnly=true)
+- Optimistic Lock , Pessimistic Lock
+- CQRS
+- @RestControllerAdvice, @ExceptionHandler
+- Spring bean validation ex) @NotNull, @NotEmpty, @NotBlank
+- @WebMvcTest
+- ObjectMapper
+- Mock, Mockito, @MockBean
+
+----
 정리
 - 테스트하기 어려운 부분을 분석하고 외부로 뽑아내기
 - StockTest.class

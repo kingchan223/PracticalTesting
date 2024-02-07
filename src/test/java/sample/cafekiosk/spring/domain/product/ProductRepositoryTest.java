@@ -95,11 +95,12 @@ public class ProductRepositoryTest {
         //4. then
         assertThat(latestProductNumber).isNull();
     }
-    private Product createProduct(String productNumber,
-                                         ProductType type,
-                                         ProductSellingStatus sellingStatus,
-                                         String name,
-                                         int price)
+    private Product createProduct(
+            String productNumber,
+            ProductType type,
+            ProductSellingStatus sellingStatus,
+            String name,
+            int price)
     {
         return Product.builder()
                 .productNumber(productNumber)

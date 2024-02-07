@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.controller.order.response.OrderResponse;
+import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import sample.cafekiosk.spring.domain.order.Order;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
 import sample.cafekiosk.spring.domain.product.Product;
@@ -28,9 +29,9 @@ public class OrderService {
     /*
     * 재고 감소 -> 동시성 고민
     * optimistic lock / pessimistic lock
-    * */
+    */
     @Transactional
-    public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime)
+    public OrderResponse createOrder(OrderCreateServiceRequest request, LocalDateTime registeredDateTime)
     {
         List<String> productNumbers = request.getProductNumbers();
         List<Product> products = findProductsBy(productNumbers);
@@ -42,7 +43,8 @@ public class OrderService {
         return OrderResponse.of(savedOrder);
     }
 
-    private void deductStockQuantities(List<Product> products) {
+    private void deductStockQuantities(List<Product> products)
+    {
         // 재고 차감 체크가 필요한 상품들 filter
         List<String> stockProductNumbers = extractStockProductNumbers(products);
         // 재고 엔티티 조회
@@ -58,7 +60,6 @@ public class OrderService {
             stock.deductQuantity(quantity);
         }
     }
-
     private static List<String> extractStockProductNumbers(List<Product> products) {
         return products.stream()
                 .filter((p) -> Product.containsStockType(p.getType()))
