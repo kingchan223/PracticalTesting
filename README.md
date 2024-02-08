@@ -216,3 +216,8 @@ ProductService.createProduct
     - 인메모리, 로컬, 외부 상관없이 모든 DB 사용이 가능하다.
     - 트랜잭션마다 롤백되지 않으므로 @Transactional을 추가로 달아줘야 한다.
 - CQRS
+
+----
+Mock
+요구사항
+- 오늘 하루 매출 통계
