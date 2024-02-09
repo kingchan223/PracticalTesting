@@ -195,6 +195,44 @@ ProductService.createProduct
 - ObjectMapper
 - Mock, Mockito, @MockBean
 
+
+----
+Mock
+요구사항
+- 오늘 하루 매출 통계
+- OrderStatisticsService.sendOrderStatisticsMail, OrderStatisticsServiceTest.sendOrderStatisticsMail
+
+
+Test Double
+- Dummy : 아무것도 하지 않는 깡통 객체
+- Fake  : 단순한 형태로 동일한 기능은 수행하나, 프로덕션에서 쓰기에는 부족한 객체 ex)FakeRepository
+- Stub  : 테스트에서 요청한 것에 대해 미리 준비한 결과를 제공하는 객체. 그 외에는 응답하지 않는다.
+- Spy   : Stub이면서 호출된 내용을 기록하여 보여줄 수 있는 객체. 일부는 객체처럼 동작시키고 일부만 Stubbing할 수 있다.
+- Mock  : 행위에 대한 기대를 명세하고, 그에 따라 동작하도록 만들어진 객체
+- Stub과 Mock이 헷갈림
+  - Stub과 Mock은 검증하려는 목적이 다르다. Stub은 상태 검증, Mock은 행위 검증이다.
+  - Stub은 어떤 기능을 요청했을 때 Stub이 상태가 어떻게 바뀌어서 get으로 검증을 해본다는 ,내부적인 상태가 어떻게 바뀌었는지에 초점을 맞춘다.
+  - Mock은 when으로 어떤 객체가 어떤 메서드를 실행했을 때는 어떤 값을 리턴할 것이다 와 같은 행위에 대해 중심으로 검증한다.
+- @Spy
+- BDDMockito
+- Classicist vs Mockist
+  - Classicist: 실제 객체로 테스트해야한다.
+    - 프레젠테이션은 모킹 테스트, 비즈니스, 펄시스턴스 레이어는 통합테스트
+    - A클래스와 B클래스가 단위 테스트를 아무리 잘했어도 두 객체가 협력했을 때는 그 결과를 확실히 알 수 없다.
+    - 실제 프로덕션 코드에서 런타임 시점에 일어날 일을 정확하게 Stubbing 했다고 단언할 수 있는가?
+    - 외부 시스템을 사용하는 부분은 모킹을 하는 것이 어쩔 수 없다. 우리 시스템을 테스트할 때는 진짜 객체를 쓰자.
+  - Mockist : 다른 작은 모든 부분들도 단위 테스트를 하였으니 Mock 객체들로 테스트를 해도 충분하다.
+    - 비즈니스 에이어도 모킹으로 테스트 하자
+
+
+키워드 정리
+- Test Double, Stubbing ex) dummy, fake, stub, spy, mock
+- @Mock, @MockBean, @Spy, @SpyBean, @InjectMocks
+- BDDMockito
+- Classicist vs Mockist
+
+참고하면 좋은 글 : https://algopoolja.tistory.com/119
+
 ----
 정리
 - 테스트하기 어려운 부분을 분석하고 외부로 뽑아내기
@@ -217,7 +255,4 @@ ProductService.createProduct
     - 트랜잭션마다 롤백되지 않으므로 @Transactional을 추가로 달아줘야 한다.
 - CQRS
 
-----
-Mock
-요구사항
-- 오늘 하루 매출 통계
+

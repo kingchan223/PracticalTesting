@@ -74,7 +74,7 @@ class OrderStatisticsServiceTest {
 
         orderRepository.save(order1);
 
-        //stub
+        // stub
         Mockito.when(mailSendClient.sendMail(any(String.class), any(String.class), any(String.class), any(String.class)))
                 .thenReturn(true);
 
@@ -86,12 +86,15 @@ class OrderStatisticsServiceTest {
 
         // when
         List<MailSendHistory> histories = mailSendHistoryRepository.findAll();
+
+        // then
         assertThat(histories).hasSize(1)
                 .extracting("content")
                 .contains("총 매출 합계는 12000원입니다.");
     }
 
-    private Order createPaymentCompletedOrder(LocalDateTime now, List<Product> products) {
+    private Order createPaymentCompletedOrder(LocalDateTime now, List<Product> products)
+    {
         Order order1 = Order.builder()
                 .orderStatus(OrderStatus.PAYMENT_COMPLETED)
                 .products(products)
@@ -101,7 +104,8 @@ class OrderStatisticsServiceTest {
     }
 
 
-    private Product createProduct(ProductType type, String productNumber, int price) {
+    private Product createProduct(ProductType type, String productNumber, int price)
+    {
         return Product.builder()
                 .productNumber(productNumber)
                 .type(type)
