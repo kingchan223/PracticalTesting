@@ -1,7 +1,9 @@
-package sample.cafekiosk.spring.domain.product;
+package sample.cafekiosk.spring.domain.product.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import sample.cafekiosk.spring.domain.product.Product;
+import sample.cafekiosk.spring.domain.product.ProductType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,18 +12,17 @@ public class ProductTypeTest {
     @Test
     void containsStockType(){
 
-        //1. given
+        // given
         ProductType productType1 = ProductType.HANDMADE;
         ProductType productType2 = ProductType.BOTTLE;
         ProductType productType3 = ProductType.BAKERY;
-        //2. stub
 
-        //3. when
+        // when
         boolean result1 = Product.containsStockType(productType1);
         boolean result2 = Product.containsStockType(productType2);
         boolean result3 = Product.containsStockType(productType3);
 
-        //4. then
+        // then
         assertThat(result1).isFalse();
         assertThat(result2).isTrue();
         assertThat(result3).isTrue();

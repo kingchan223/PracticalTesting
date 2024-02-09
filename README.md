@@ -163,8 +163,6 @@ ProductService.createProduct
 
 
 ### Validation
-
-
 - @NotNull vs @NotBlank vs @NotEmpty
     - @NotNull  : 빈 문자열(""), 빈 공백(" ")도 통과됨
     - @NotEmpty : 빈 문자열은 통과 안되지만 빈 공백도 통과됨
@@ -201,7 +199,6 @@ Mock
 요구사항
 - 오늘 하루 매출 통계
 - OrderStatisticsService.sendOrderStatisticsMail, OrderStatisticsServiceTest.sendOrderStatisticsMail
-
 
 Test Double
 - Dummy : 아무것도 하지 않는 깡통 객체

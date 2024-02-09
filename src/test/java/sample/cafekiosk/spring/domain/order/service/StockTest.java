@@ -1,4 +1,4 @@
-package sample.cafekiosk.spring.api.service.order;
+package sample.cafekiosk.spring.domain.order.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,14 +13,14 @@ class StockTest {
     @Test
     void isQuantityLessThan(){
 
-        //1. given
+        // given
         Stock stock = Stock.create("001", 1);
         int quantity = 2;
-        //2. stub
+        // stub
 
-        //3. when
+        // when
         boolean result = stock.isQuantityLessThan(quantity);
-        //4. then
+        // then
         assertThat(result).isTrue();
      }
 
@@ -28,14 +28,13 @@ class StockTest {
     @Test
     void deductQuantity(){
 
-        //1. given
+        // given
         Stock stock = Stock.create("001", 1);
         int quantity = 1;
-        //2. stub
 
-        //3. when
+        // when
         stock.deductQuantity(quantity);
-        //4. then
+        // then
         assertThat(stock.getQuantity()).isZero();
     }
 
@@ -43,10 +42,9 @@ class StockTest {
     @Test
     void deductQuantity2(){
 
-        //1. given
+        // given
         Stock stock = Stock.create("001", 1);
         int quantity = 2;
-        //2. stub
 
         //when then
         assertThatThrownBy(() -> stock.deductQuantity(quantity))

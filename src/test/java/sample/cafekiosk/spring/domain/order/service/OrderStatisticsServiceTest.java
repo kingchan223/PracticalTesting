@@ -1,13 +1,15 @@
-package sample.cafekiosk.spring.api.service.order;
+package sample.cafekiosk.spring.domain.order.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import sample.cafekiosk.spring.api.service.order.OrderStatisticsService;
 import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import sample.cafekiosk.spring.client.mail.MailSendClient;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistory;
@@ -35,18 +37,17 @@ import static org.assertj.core.api.Assertions.*;
 class OrderStatisticsServiceTest {
 
     @Autowired
-    private OrderStatisticsService orderStatisticsService;
+    private OrderStatisticsService orderStatisticsService; // 실제 객체 mock 사용 X
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderRepository orderRepository; // 실제 객체 mock 사용 X
     @Autowired
-    private OrderProductRepository orderProductRepository;
+    private OrderProductRepository orderProductRepository; // 실제 객체 mock 사용 X
     @Autowired
-    private ProductRepository productRepository;
+    private ProductRepository productRepository; // 실제 객체 mock 사용 X
     @Autowired
-    private MailSendHistoryRepository mailSendHistoryRepository;
-
+    private MailSendHistoryRepository mailSendHistoryRepository; // 실제 객체 mock 사용 X
     @MockBean
-    private MailSendClient mailSendClient;
+    private MailSendClient mailSendClient; // 메일 전송은 외부와 연관된 객체 mock 사용 O
 
     @AfterEach
     void tearDown() {
@@ -71,12 +72,11 @@ class OrderStatisticsServiceTest {
         Order order2 = createPaymentCompletedOrder(now, products1);
         Order order3 = createPaymentCompletedOrder(LocalDateTime.of(2023,3,5,23,59,59), products1);
         Order order4 = createPaymentCompletedOrder(LocalDateTime.of(2023,3,6,0,0,0), products1);
+        List<Order> orders = List.of(order1, order2, order3, order4);
+        orderRepository.saveAll(orders);
 
-        orderRepository.save(order1);
-
-        // stub
-        Mockito.when(mailSendClient.sendMail(any(String.class), any(String.class), any(String.class), any(String.class)))
-                .thenReturn(true);
+        BDDMockito.given(mailSendClient.sendMail(any(String.class), any(String.class), any(String.class), any(String.class)))
+                .willReturn(true); // mailSendClient는 외부와 연관된 작업을 수행하는 객체이기 때문에 mock을 사용한다.
 
         // when
         boolean result = orderStatisticsService.sendOrderStatisticsMail(LocalDate.of(2023, 3, 5), "test@test.com");
