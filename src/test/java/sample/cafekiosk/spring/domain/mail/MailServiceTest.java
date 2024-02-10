@@ -34,55 +34,54 @@ class MailServiceTest {
 
     @DisplayName("메일 전송 테스트")
     @Test
-    void sendMail() {
+    void sendMail(){
         /*
          * 아래에서  Mockito.mock(MailSendClient.class)로 Mock 객체를 만들 수도 있고
          * @Mock
          * private MailSendClient mailSendClient;
          * 이렇게 테스트 클래스 필드에 선언하여 만들수도 있다. 만약 필드에 선언해서 Mock 객체를 만드려면 클래스에 @ExtendWith(MockitoExtension.class) 어노테이션을 추가해야하 한다.
+         * // given
+//       * MailSendClient mailSendClient = Mockito.mock(MailSendClient.class); // mock 객체를 만들어 준다.
+//       * MailSendHistoryRepository mailSendHistoryRepository = Mockito.mock(MailSendHistoryRepository.class);
          * */
-        // given
-//        MailSendClient mailSendClient = Mockito.mock(MailSendClient.class); // mock 객체를 만들어 준다.
-//        MailSendHistoryRepository mailSendHistoryRepository = Mockito.mock(MailSendHistoryRepository.class);
 
         /*
          * 아래에서  new MailService(mailSendClient, mailSendHistoryRepository)로 Mock 객체를 만들 수도 있고
+         * MailService mailService = new MailService(mailSendClient, mailSendHistoryRepository);
          * @InjectMocks
          * private MailService mailService;
          * 이렇게 테스트 클래스 필드에 선언하여 만들수도 있다.
          * */
-//        MailService mailService = new MailService(mailSendClient, mailSendHistoryRepository);
-
+        // given
         Mockito.when(mailSendClient.sendMail(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(true);
 
-        //when
+        // when
         boolean result = mailService.sendMail("", "", "", "");
 
         // then
-        // mailSendHistoryRepository.save 행위가 한번 불렸는지 검증
+        // mailSendHistoryRepository.save 행위가 한번 불렸는지 검증한다. (spy와 같은 역할) mailService.sendMail를 수행시킨 후 검증시킬 수 있다.
         Mockito.verify(mailSendHistoryRepository, times(1)).save(any(MailSendHistory.class));
 
         //then
         assertThat(result).isTrue();
     }
 
-    @DisplayName("메일 전송 테스트 - BDDMockito(일반 Mockito에서 given절에 when 문법이 들어가는 점을 해결하기 위해 탄생)")
+    @DisplayName("메일 전송 테스트 - BDDMockito(일반 Mockito에서 given절에 when 문법이 들어가는 점을 해결하기 위해 탄생. Mockito 래핑 클래스이다.)")
     @Test
-    void sendMailWithBDDMockito() {
-
+    void sendMailWithBDDMockito(){
         // given
         BDDMockito.given(mailSendClient.sendMail(anyString(), anyString(), anyString(), anyString()))
                 .willReturn(true);
 
-        //when
+        // when
         boolean result = mailService.sendMail("", "", "", "");
 
         // then
         // mailSendHistoryRepository.save 행위가 한번 불렸는지 검증
         Mockito.verify(mailSendHistoryRepository, times(1)).save(any(MailSendHistory.class));
 
-        //then
+        // then
         assertThat(result).isTrue();
     }
 }

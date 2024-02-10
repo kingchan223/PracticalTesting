@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StockTest {
+    private static final Stock stock = Stock.create("001", 1); // 테스트 간 독립성을 보장하지 못하게 한다.
     @DisplayName("재고의 수량이 제공된 수량보다 작은지 확인한다.")
     @Test
     void isQuantityLessThan(){

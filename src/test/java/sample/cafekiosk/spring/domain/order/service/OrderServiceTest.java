@@ -161,9 +161,9 @@ public class OrderServiceTest {
                 );
     }
 
-    @DisplayName("재고가 없는 상품을 주문하려는 경우 예외가 발생한다.")
+    @DisplayName("재고가 없는 상품을 주문하려는 경우 예외가 발생한다. - 두가지의 관심사가 존재(Stock.deductQuantity)")
     @Test
-    void createOrderWithNoStock() {
+    void createOrderWithNoStock1() {
 
         //given
         LocalDateTime registeredDateTime = LocalDateTime.now();
@@ -174,7 +174,32 @@ public class OrderServiceTest {
 
         Stock stock1 = Stock.create("001", 2);
         Stock stock2 = Stock.create("002", 2);
-        stock1.deductQuantity(1); //TODO
+        stock1.deductQuantity(1); //TODO <- 얘로 인해 createOrder만 테스트 하는 것이 아닌 다른 API의 테스트도 하게 된다. 즉 두가지의 관심사가 생긴다.
+        stockRepository.saveAll(List.of(stock1, stock2));
+
+        OrderCreateServiceRequest request = OrderCreateServiceRequest.builder()
+                .productNumbers(List.of("001","001","002","003"))
+                .build();
+
+        //when //then
+        assertThatThrownBy(() -> orderService.createOrder(request, registeredDateTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("재고가 부족한 상품이 있습니다.");
+    }
+
+    @DisplayName("재고가 없는 상품을 주문하려는 경우 예외가 발생한다. - createOrderWithNoStock1의 수정버전")
+    @Test
+    void createOrderWithNoStock2() {
+
+        //given
+        LocalDateTime registeredDateTime = LocalDateTime.now();
+        Product product1 = createProduct(BOTTLE, "001", 1000);
+        Product product2 = createProduct(BAKERY, "002", 3000);
+        Product product3 = createProduct(HANDMADE, "003", 5000);
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        Stock stock1 = Stock.create("001", 1); // 여기서 아예 재고가 부족하도록 만든다.
+        Stock stock2 = Stock.create("002", 2);
         stockRepository.saveAll(List.of(stock1, stock2));
 
         OrderCreateServiceRequest request = OrderCreateServiceRequest.builder()
