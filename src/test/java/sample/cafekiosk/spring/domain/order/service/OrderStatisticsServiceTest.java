@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.api.service.order.OrderStatisticsService;
 import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import sample.cafekiosk.spring.client.mail.MailSendClient;
@@ -32,9 +33,9 @@ import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.SELLIN
 import static sample.cafekiosk.spring.domain.product.ProductType.*;
 import static org.assertj.core.api.Assertions.*;
 
-@ActiveProfiles("test")
-@SpringBootTest
-class OrderStatisticsServiceTest {
+//@ActiveProfiles("test")
+//@SpringBootTest
+class OrderStatisticsServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private OrderStatisticsService orderStatisticsService; // 실제 객체 mock 사용 X
@@ -46,8 +47,7 @@ class OrderStatisticsServiceTest {
     private ProductRepository productRepository; // 실제 객체 mock 사용 X
     @Autowired
     private MailSendHistoryRepository mailSendHistoryRepository; // 실제 객체 mock 사용 X
-    @MockBean
-    private MailSendClient mailSendClient; // 메일 전송은 외부와 연관된 객체 mock 사용 O
+
 
     @AfterEach
     void tearDown() {

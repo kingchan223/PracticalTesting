@@ -1,11 +1,13 @@
 package sample.cafekiosk.spring.domain.product.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
@@ -18,12 +20,17 @@ import static org.assertj.core.api.Assertions.tuple;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
-@ActiveProfiles("test")
-@DataJpaTest // @SpringBootTest 보다 가볍다. jpa와 관련된 빈들만 띄워서 테스트한다. DataJpaTest는 테스트 코드를 수행할때 트랜잭션(@Transactional)이 걸리면서 끝나면 자동으로 롤잭된다 @SpringBootTest는 이거 안해줌
+//@ActiveProfiles("test")
+//@DataJpaTest // @SpringBootTest 보다 가볍다. jpa와 관련된 빈들만 띄워서 테스트한다. DataJpaTest는 테스트 코드를 수행할때 트랜잭션(@Transactional)이 걸리면서 끝나면 자동으로 롤잭된다 @SpringBootTest는 이거 안해줌
 //@SpringBootTest
-public class ProductRepositoryTest {
+public class ProductRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private ProductRepository productRepository;
+
+    @BeforeEach
+    void tearDown() {
+        productRepository.deleteAllInBatch();
+    }
 
     @DisplayName("원하는 판매 상태를 가진 상품들을 가져온다.")
     @Test

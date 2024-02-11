@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import sample.cafekiosk.spring.ControllerTestSupport;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.controller.product.ProductController;
 import sample.cafekiosk.spring.api.service.order.OrderService;
@@ -21,14 +23,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@WebMvcTest(controllers = OrderController.class) // controller 레이어를 위한 테스트 어노테이션
-class OrderControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean // 컨테이너에 mock으로 만든 객체를 넣어주는 역할
-    private OrderService orderService;
+//@WebMvcTest(controllers = OrderController.class) // controller 레이어를 위한 테스트 어노테이션
+class OrderControllerTest extends ControllerTestSupport {
+//    @Autowired
+//    private MockMvc mockMvc;
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//    @MockBean // 컨테이너에 mock으로 만든 객체를 넣어주는 역할
+//    private OrderService orderService;
 
     @DisplayName("신규 주문을 등록한다.")
     @Test

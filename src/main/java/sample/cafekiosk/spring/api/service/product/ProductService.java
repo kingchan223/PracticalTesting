@@ -28,28 +28,30 @@ import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductNumberFactory productNumberFactory;
 
-    public List<ProductResponse> getSellingProduct() {
+    public List<ProductResponse> getSellingProduct()
+    {
         return productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay()).stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
     }
     // 동시성 이슈 발생 가능 : UUID를 사용하거나 product_number 필드에 유니크 인덱스를 걸고 재시도하는 로직을 추가하는 방법
     @Transactional
-    public ProductResponse createProduct(ProductCreateServiceRequest request) {
-        String nextProductNumber = createNextProductNumber();
+    public ProductResponse createProduct(ProductCreateServiceRequest request)
+    {
+//        String nextProductNumber = createNextProductNumber();
+        String nextProductNumber = productNumberFactory.createNextProductNumber();
 
         Product product = request.toEntity(nextProductNumber);
         productRepository.save(product);
         return ProductResponse.of(product);
     }
-    private String createNextProductNumber() {
-        String latestProductNumber =  productRepository.findLatestProductNumber();
-        if(latestProductNumber == null) return "001";
-        int latestProductNumberInt = Integer.parseInt(latestProductNumber);
-        int nextProductNumberInt = latestProductNumberInt + 1;
-        return String.format("%03d", nextProductNumberInt); //9 -> 009
-
-
-    }
+//    private String createNextProductNumber() {
+//        String latestProductNumber =  productRepository.findLatestProductNumber();
+//        if(latestProductNumber == null) return "001";
+//        int latestProductNumberInt = Integer.parseInt(latestProductNumber);
+//        int nextProductNumberInt = latestProductNumberInt + 1;
+//        return String.format("%03d", nextProductNumberInt); //9 -> 009
+//    }
 }

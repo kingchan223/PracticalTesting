@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.domain.product.Product;
 
 import java.util.List;
@@ -14,9 +15,9 @@ import static org.assertj.core.api.Assertions.tuple;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
-@ActiveProfiles("test")
-@DataJpaTest
-public class StockRepositoryTest {
+//@ActiveProfiles("test")
+//@DataJpaTest
+public class StockRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private StockRepository stockRepository;
     @DisplayName("상품 번호 리스트로 재고를 조회한다.")

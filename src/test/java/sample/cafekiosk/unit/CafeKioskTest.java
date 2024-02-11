@@ -1,5 +1,6 @@
 package sample.cafekiosk.unit;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverage.Americano;
@@ -100,6 +101,7 @@ public class CafeKioskTest {
         assertThat(totalPrice).isEqualTo(8500); // 처음에는 calculateTotalPriceTDDVer 구현부를 작성하지 않았으므로 실패(RED)
     }
 
+    @Disabled // 해당 테스트는 수행되지 않도록 한다.
     @DisplayName("테스트 실행 시간에 따라 성공/실패가 달라지는 테스트")
     @Test
     void createOrder(){

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.controller.order.response.OrderResponse;
 import sample.cafekiosk.spring.api.service.order.OrderService;
@@ -27,10 +28,10 @@ import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.*;
 
 //@DataJpaTest /얘는 service 객체 못찾음
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 //@Transactional//(롤백을 대신 해줌 tearDown 필요없음) <- 실제 서비스 레이어의 트랜잭션이 설정되어있는 것처럼 보일 수 있기 때문에 잘 알고 사용해야한다.
-@SpringBootTest
-public class OrderServiceTest {
+//@SpringBootTest
+public class OrderServiceTest extends IntegrationTestSupport {
     @Autowired
     private OrderService orderService;
     @Autowired

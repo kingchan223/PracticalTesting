@@ -241,30 +241,53 @@ Test Double
    - ex) CafeKiosk의 두개의 createOrder에서 제어할 수 없는 LocalDateTime은 상위 레벨로 올리고 테스트할 때 제어할 수 있도록 하였다.
    - CafeKioskTest의 createOrder는 완벽하게 제어하지 못한 것.
    - ex) OrderServiceTest.createOrder 에서 registeredDateTime을 직접 생성하여 제어할 수 있도록 한다.
-3. 테스트 환경의 독립성을 보장하자.
+3. 테스트 환경의 독립성을 보장하자
    - 다른 API를 사용하는 경우 독립성을 보장하자
    - ex) OrderServiceTest.createOrderWithNoStock1,createOrderWithNoStock2
-4. 테스트 간 독립성을 보장하자.
+4. 테스트 간 독립성을 보장하자
    - ex) StockTest의 private static final Stock stock = Stock.create("001", 1);
    - 이처럼 두 가지 이상의 테스트가 하나의 공유 자원을 사용하게 되면 테스트 간 독립성을 보장하지 못한다. 
    - 이는 테스트 간의 순서에 따라 테스트의 성공 여부가 달라질 수 있다.
 5. 한 눈에 들어오는 Test Fixture 구성하기
    - Fixture: 고정물, 고정되어 있는 물체. Test Fixture: 테스트를 위해 원하는 상태로 고정시킨 일련의 객체 (given 절)
-   - @BeforeAll, @BeforeEach와 같은 셋업 메서드를 사용해서 픽스처를 만드는 경우 4번을 지킬 수 없게 될 확률이 크다. 하여 지양하자.
+   - @BeforeAll, @BeforeEach와 같은 셋업 메서드를 사용해서 Fixture를 만드는 경우 4번(테스트 간 독립성 보장)을 지킬 수 없게 될 확률이 크다. 하여 지양하자.
    - 이는 각 테스트 코드의 given 절에 아무것도 없어 셋업 메서드를 계속 보고 오도록 한다. 이는 가독성이 좋지 않아 문서로서의 기능도 약화시킨다.
    - 각 테스트 입장에서 봤을 때 아예 몰라도 테스트 내용을 이해하는 데에 문제가 없고, 수정해도 모든 테스트에 영향을 주지 않는 경우에만 사용하자. 
    - 위의 예로 Order 테스트를 하는 경우 User의 정보가 반드시 필요한데 이 둘은 연관관계를 맺고 있는 경우에 우리는 Order만 테스트할 것이므로 User는 몰라도 지장없다. 이런 경우에만 사용한다.
-   - 혹은 data.sql와 같은 파일을 사용하는 것도 파편화가 일어난다. given 데이터가 data.sql에 가기 때문. 
-   - 또한 data.sql은 프로젝트 구조가 커질 수록 엄청 커질 수 있다. 이 역시 하나의 관리 포인트가 생기게 된다.
-   - creatProduct와 같은 빌더를 사용하는 객체 create 메서드는 반드시 필요한 파라미터만 받도록 만들자. 테스트의 가독성을 높이기 위해
+   - data.sql와 같은 파일을 사용하는 것도 파편화가 일어난다. given 데이터가 data.sql에 가기 때문. 
+   - 또한 data.sql은 프로젝트 구조가 커질 수록 엄청 커질 수 있다. 이 역시 추가적인 관리 포인트가 생기게 된다.
+   - creatProduct와 같은 빌더를 사용하는 객체create 메서드는 반드시 필요한 파라미터만 받도록 만들자. (테스트의 가독성을 높이기 위해)
 6. Test Fixture 클렌징
    - ex) OrderServiceTest.createOrder
    - tearDown의 deleteAllInBatch와 deleteAll의 차이
    - deleteAllInBatch는 연관관계 따른 순서를 잘 맞춰줘야 한다.
-   - deleteAll은 delete 하기 전에 select를 가져온 뒤 테이블에 있는 데이터마다 delete ... where 쿼리를 하나씩 보낸다.
+   - deleteAll은 delete 하기 전에 select로 가져온 뒤(연관관계 확인을 위해) 로우마다 delete ... where 쿼리를 하나씩 보낸다.
    - deleteAll의 장점은 연관관계가 있는 테이블의 로우도 같이 한꺼번에 지워준다는 것이다.
-   - 하지만 로우마다 delete 쿼리가 나가기 때문에 시간적 비용이 많이 든다.
-----
+   - 하지만 로우마다 delete 쿼리가 나가기 때문에 시간적 비용이 많이 든다. (deleteAllInBatch > deleteAll)
+7. @ParameterizedTest
+   - 하나의 테스트 케이스에서 값을 여러개로 바꿔가면서 테스트를 해보고 싶을 때 사용.
+   - ex) ProductTypeTest.containsStockType5,6
+   - https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests
+   - Spock를 Junit대신 사용하면 parameterized test를 더 간단하게 할 수 있다. https://spockframework.org/spock/docs/2.3/data_driven_testing.html#data-tables
+8. @DynamicTest
+   - 어떤 하나의 환경을 설정해두고 사용자 환경의 시나리오를 테스트하고 싶을 때.
+   - StockTest.stockDeductionDynamicTest
+9. 테스트 수행도 비용이다. 환경 통합하기
+   - 전체 테스트 수행하기 : intelliJ기준 . Gradle 탭 -> Tasks -> verification -> test 클릭
+   - IntegrationTestSupport, ControllerTestSupport를 다른 테스트 클래스들이 상속받게 하여 Spring Boot 서버가 올라가는 횟수를 줄임
+10. private 메서드의 테스트는 어쩧게 할까?
+    - private 메서드의 테스트는 하지 말자
+    - 객체를 분리할 시점이 아닌지 고민해보자
+    - ex) ProductService.createNextProductNumber
+    - 클라이언트는 public만 알면 되고 private 기능은 알 필요가 없다.
+    - ProductService의 경우에는 createProduct를 테스트하면 createNextProductNumber가 테스트된다.
+    - 그런데 만약 createProduct 가 createNextProductNumber 까지 테스트하는 것이 하나의 테스트가 2가지 관심사를 가지고 있다는 생각이 든다면 다른 객체로 분히라면 된다.
+    - ProductNumberFactory.createNextProductNumber <- 이제 얘를 따로 테스트하면 된다. 
+11. 테스트에서만 필요한 메서드가 생겼는데 프로덕션 코드에서는 필요 없다면?
+    - ex) ProductControllerTest.createProduct의 ProductCreateRequest.builder는 사실 프로덕션 코드에서는 필요가 없다.
+    - 물론 프로덕션 코드에서는 사용하지 않지만 테스트를 위해서는 필요하므로만들어도 된다.
+    - 물론 보수적으로 접근해야한다. 최대한 안만드는 것이 좋다.
+
 정리
 - 테스트하기 어려운 부분을 분석하고 외부로 뽑아내기
 - StockTest.class
